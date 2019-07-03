@@ -15,43 +15,44 @@ var connection = mysql.createConnection({
 function displayItems() {
     connection.query('SELECT item_id, product_name, price FROM products', function (err, data) {
         if (err) throw err;
-        var tableData = Array.from(Object.create(data)); // why doesn't this create a deep copy of the data array??
-        console.log(data[1].price)
-        tableData.forEach(function (item) {
+        
+        data.forEach(function (item) {
             item.price = `$` + item.price.toFixed(2);
         });
-        console.log(data[1].price)
-        console.table(tableData);
 
-        promptItem(data);
+        console.table(data);
+
+        promptItem();
     });
 
 }
 
-function promptItem(data) {
-  
-    inquirer.prompt([{
-        type: 'input',
-        message: "Which item would you like to buy? Please enter the item ID",
-        name: 'whichId'
-    }]).then(function (answers) {
-        var price;
-        var id = answers.whichId;
+function promptItem() {
+    connection.query('SELECT item_id, product_name, price FROM products', function (err, data) {
+        if (err) throw err;
+        inquirer.prompt([{
+            type: 'input',
+            message: "Which item would you like to buy? Please enter the item ID",
+            name: 'whichId'
+        }]).then(function (answers) {
+            var price;
+            var id = answers.whichId;
 
-        var isValid = false; // verify id entered is valid
-        for (var i = 0; i < data.length; i++) {
-            if (id == data[i].item_id) {
-                isValid = true;
-                price = data[i].price;
+            var isValid = false; // verify id entered is valid
+            for (var i = 0; i < data.length; i++) {
+                if (id == data[i].item_id) {
+                    isValid = true;
+                    price = data[i].price;
+                };
             };
-        };
 
-        if (isValid) {
-            verifyQuant(price, id);
-        } else {
-            console.log(`Please enter a valid item_id`);
-            promptItem(data);
-        }
+            if (isValid) {
+                verifyQuant(price, id);
+            } else {
+                console.log(`Please enter a valid item_id`);
+                promptItem(data);
+            }
+        });
     });
 }
 
@@ -75,9 +76,9 @@ function verifyQuant(price, id) {
                             function (err) {
                                 if (err) throw err;
                             });
-  
+
                         var totalPrice = '$' + (price * answers.quantPurchasing).toFixed(2);
-                        console.log(`Your total due is ${totalPrice}\n`)
+                        console.log(`\n Your total due is ${totalPrice}\n`)
                         displayItems();
                     } else {
                         console.log(`\nI'm sorry, we have insufficient stock.\n`)
