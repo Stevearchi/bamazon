@@ -1,7 +1,9 @@
 var mysql = require('mysql');
 var inquirer = require('inquirer');
-var cTable = require('console.table');
+require('console.table');
 
+
+// set up connection to database
 var connection = mysql.createConnection({
     port: 3307,
     database: 'bamazondb',
@@ -16,8 +18,8 @@ function displayItems() {
     connection.query('SELECT item_id, product_name, price FROM products', function (err, data) {
         if (err) throw err;
         
-        data.forEach(function (item) {
-            item.price = `$` + item.price.toFixed(2);
+        data.forEach(function (item) {   
+            item.price = `$` + item.price.toFixed(2);  // add $ to prices and shows two decimals for integers to represent currency
         });
 
         console.table(data);
