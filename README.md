@@ -1,4 +1,9 @@
-This is an app emulating an online store.  
+This is an app emulating an online store.  Whem you 'buy' items, the database is updated.  You receive a message when the requested item/quantity is lower than the quantity in the database.
+technologies used:
+ * Javascript
+ * node
+ * mysql
+ * MAMP
 
 Screenshots:
 
@@ -7,8 +12,3 @@ Screenshots:
 ![Item has insufficient quantity](/assets/images/third.png)
 
 
-technologies used:
- * Javascript
- * node
- * mysql
- * MAMP
